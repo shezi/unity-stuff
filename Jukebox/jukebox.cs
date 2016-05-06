@@ -2,7 +2,35 @@
 using System.Collections;
 using System;
 
-public class jukebox : MonoBehaviour {
+public class jukebox : MonoBehaviour
+{
+    public bool playOnStart = true; // properties can't be used in UnityEditor, so we have to fake the startup-behavior
+
+    private bool _isPlaying = false;  // must be false as default because LOLproperties
+    public bool isPlaying
+    {
+        get
+        {
+            return _isPlaying;
+        }
+        set
+        {
+            if (_isPlaying != value)
+            {
+                _isPlaying = value;
+                if (_isPlaying)
+                {
+                    mpPlayer.loop = false;
+                    StartCoroutine(waitForTrackToEnd());
+                }
+                else
+                {
+                    mpPlayer.Stop();
+                }
+            }
+        }
+    }
+
     public AudioSource mpPlayer = null;
     public AudioClip[] playList;
     public playModeEnum playMode = playModeEnum._playlist;
@@ -16,8 +44,10 @@ public class jukebox : MonoBehaviour {
     private int currentTrack = -1;
     private float nextPlayTime = 0f;
 
-	// Use this for initialization
-	void Start () {
+
+    // Use this for initialization
+    void Start()
+    {
         // if no audiosource is assigned, try to get one
         if (mpPlayer == null)
         {
@@ -25,21 +55,40 @@ public class jukebox : MonoBehaviour {
         }
         if (mpPlayer == null)
         {
-            throw new Exception("no AudioSource, add one to this GameObject or directly to mpPlayer.");
+            throw new Exception("no AudioSource, add one to this GameObject or directly to mpPlayer!");
         }
 
-        mpPlayer.loop = false;
-        StartCoroutine(waitForTrackToEnd());
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+        if (playOnStart)
+        {
+            startPlaying();
+        }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    /// <summary>
+    /// for menu bindability this function exists to control the property
+    /// </summary>
+    public void startPlaying()
+    {
+        isPlaying = true;
+    }
+
+    /// <summary>
+    /// for menu bindability this function exists to control the property
+    /// </summary>
+    public void stopPlaying()
+    {
+        isPlaying = false;
+    }
 
     private IEnumerator waitForTrackToEnd()
     {
-        while (true)
+        while (isPlaying)
         {
             while (mpPlayer.isPlaying)
             {
@@ -50,7 +99,6 @@ public class jukebox : MonoBehaviour {
             yield return new WaitForSeconds(0.01f);
         }
     }
-
 
     /// <summary>
     /// starts the next track
