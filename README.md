@@ -7,6 +7,15 @@ Some stuff that is useful for Unity.
 
 Helps you fade in/out your canvas components.
 
+## Jukebox
+
+A simple Jukebox to play Music in your Game.
+
+Features:
+
+* Playlist
+* Random
+* break between tracks
 
 # License
 
