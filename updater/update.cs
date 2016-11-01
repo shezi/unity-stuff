@@ -11,16 +11,30 @@ using System.Collections;
 
 
 public class update : MonoBehaviour {
+    /*
+     * make sure the versions you compare have the same dot level
+     * always compare 1.1.0 with 1.1.1
+     * don't compare 1.1.0 with 1.1 !
+     */
     [Tooltip("If empty: use the unity version system")]
     public string versionString = "";
+    /*
+     * make sure the URL delivers is a verion string, nothing more
+     * (could be a plain txt file)
+     */
     [Tooltip("The URL to check for Updates")]
     public string versionUrl = "";
+    /*
+     * if set it wil display the result of the update check directly
+     * if null nothing will happen and you have to deal with it yourself
+     */
+    [Tooltip("the UI text field for the update check result")]
     public Text autoUpdateTextField = null;
+
+    // worker states
     private Worker workerObject = new Worker();
     private Thread workerThread = null;
     private bool lastBusyState = false;
-    
-
 
 	// Use this for initialization
 	void Start () {
@@ -46,7 +60,7 @@ public class update : MonoBehaviour {
 	}
 
     /*
-     bind this function to the UI
+     * bind this function to the UI for direct clicking
     */
     public void startCheckUi()
     {
@@ -84,7 +98,7 @@ public class update : MonoBehaviour {
 
     /*
      * this function is called when a check finishes
-     * put your finis logic here
+     * put your finish logic here
      * (IF needed)
      */
     private void finished()
@@ -97,11 +111,17 @@ public class update : MonoBehaviour {
         return workerObject.isBusy() || (workerThread != null && workerThread.IsAlive);
     }
 
-    public bool getStatus()
+    /*
+     * information enum about the result of the last check
+     */
+    public Worker.updateStates getStatus()
     {
-        return workerObject.isBusy();
+        return workerObject.lastCheck;
     }
 
+    /*
+     * text information about the result of the last check
+     */
     public string getInfoString()
     {
         return workerObject.getInfoText();
