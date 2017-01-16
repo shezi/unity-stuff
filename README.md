@@ -17,6 +17,10 @@ Features:
 * Random
 * break between tracks
 
+## RigidbodyLocalSpace
+
+Use Rigidbody position constrains in local space instead of world space.
+
 # License
 
 Copyright (C) 2016 Johannes Spielmann
